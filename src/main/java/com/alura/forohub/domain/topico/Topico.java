@@ -2,6 +2,7 @@ package com.alura.forohub.domain.topico;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,5 +37,20 @@ public class Topico {
         this.autor = datos.autor();
         this.curso = datos.curso();
         this.respuestas = 0;
+    }
+
+    public void actualizarInformacion(DatosActualizacionTopico datos){
+        if(datos.titulo() != null){
+            this.titulo = datos.titulo();
+        }
+        if(datos.mensaje() != null){
+            this.mensaje = datos.mensaje();
+        }
+        if(datos.status() != null){
+            this.status = datos.status();
+        }
+        if(datos.curso() != null){
+            this.curso = datos.curso();
+        }
     }
 }

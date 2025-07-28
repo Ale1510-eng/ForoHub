@@ -19,13 +19,13 @@ public class TopicoController {
     @Autowired
     private TopicoRepository repository;
     @Autowired
-    private TopicoService creacion;
+    private TopicoService service;
 
 
     @PostMapping
     @Transactional
     public ResponseEntity registrar (@RequestBody @Valid DatosRegistroTopico datos, UriComponentsBuilder uriComponentsBuilder){
-        var detalleTopico = creacion.crear(datos);
+        var detalleTopico = service.crear(datos);
         var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(detalleTopico.id()).toUri();
         return ResponseEntity.created(uri).body(detalleTopico);
     }
@@ -35,6 +35,26 @@ public class TopicoController {
             @PageableDefault(size = 10, sort ={"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion){
         var page = repository.findAll(paginacion).map(DatosDetalleListaTopico::new);
         return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity detallar(@PathVariable Long id){
+        var detalleTopico = service.visualizarDetalles(id);
+        return ResponseEntity.ok(detalleTopico);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity actualizar(@RequestBody @Valid DatosActualizacionTopico datos, @PathVariable Long id){
+        var topicoActualizado = service.actualizar(id, datos);
+        return ResponseEntity.ok(topicoActualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity eliminar (@PathVariable Long id){
+        service.eliminarTopico(id);
+        return ResponseEntity.noContent().build();
     }
 
 
